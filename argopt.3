@@ -1,0 +1,335 @@
+.\" (C) 2003-2012 by Jules Colding <jcolding@gmail.com>
+.\"
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one
+.\" 
+.\" This manual page may be incorrect or out-of-date. The author(s) assume
+.\" no responsibility for errors or omissions, or for damages resulting
+.\" from the use of the information contained herein. The author(s) may
+.\" not have taken the same level of care in the production of this 
+.\" manual, which is licensed free of charge, as they might when working
+.\" professionally.
+.\" 
+.\" Formatted or processed versions of this manual, if unaccompanied by
+.\" the source, must acknowledge the copyright and authors of this work.
+.\" License.
+.\"
+.\" Original work Fri Sep 14:29:18 by Jules Colding <jcolding@gmail.com>
+.\"
+.TH ARGOPT 3 2003-09-26 "" "Linux Programmer's Manual"
+.SH NAME
+argopt \- Parse command line options
+.SH SYNOPSIS
+.nf
+.B #include <unistd.h>
+.B #include <argopt.h>
+.sp
+.B enum need_param_t {
+.B 	NO_PARAM,
+.B 	NEED_PARAM,
+.B 	OPTIONAL_PARAM
+.B };
+.sp 
+.B struct option_t {
+.B 	const char *name;
+.B 	const char *help;
+.B 	const enum need_param_t param;
+.B 	int *flag;
+.B 	int val;
+.B };
+.B
+.sp
+.BI "int argopt(int " argc , 
+.BI "           char *"argv[] ,
+.BI "           const struct option_t *" options ,
+.BI "           int *" index ,
+.BI "           char **" optarg );
+.sp
+.BI "void argopt_help(FILE *"output,
+.BI "                 const char * const "notice,
+.BI "                 const char * const "prog,
+.BI "                 const struct option_t * const "options);
+.sp
+.BI "void argopt_comletions(FILE *"output,
+.BI "                       const char * const "notice,
+.BI "                       const char * const "opt,
+.BI "                       const struct option_t * const "options);
+.fi
+.SH DESCRIPTION
+The
+.B argopt()
+function parses the command line arguments. Its arguments
+.I argc
+and
+.I argv
+are the argument count and array as passed to the
+.B main()
+function on program invocation. An element of 
+.I argv
+that starts with `-' (and is not exactly "-")
+is an option element. The characters of this element (aside from the 
+initial `-') is the option string. If 
+.B argopt()
+is called repeatedly, it returns successively a code that identifies each 
+of the option elements, all option parameters and all non-option strings.
+.PP
+.B argopt_help()
+is a convienience function that will output, nicely formatted, all options 
+affiliated with a non-NULL help string. The help will be written to
+.I output
+unless it is NULL, in which case it will be written to stdout.
+.PP
+.B argopt_completions()
+is a convienience function that will output, nicely formatted, all possible
+completions of a specific ambigious command line option. 
+.I opt
+must be without any leading '-'.
+.PP
+.I options
+is a pointer to the first element of an array of
+.B struct option_t
+declared in
+.B <argopt.h>
+as
+.nf
+.sp
+.in 10
+struct option_t {
+.in 14
+const char *name;
+const char *help;
+const enum need_param_t param;
+int *flag;
+int val;
+.in 10
+};
+.fi
+.PP
+The meanings of the different fields are:
+.TP
+.I name
+is the name of the option, the option string, in other words.
+.TP
+.I help
+is a short optional help string, which may be NULL.
+.TP
+.I param
+is: \fBNO_PARAM\fP if the option does not take a parameter,
+\fBNEED_PARAM\fP if the option requires a parameter, or
+\fBOPTIONAL_PARAM\fP if the option takes an optional parameter.
+.TP
+.I flag
+specifies how results are returned when an option has been found. 
+If \fIflag\fP is \fBNULL\fP, then \fBargopt()\fP returns \fIval\fP.
+Otherwise, \fBargopt()\fP returns \fBARGOPT_OPTION_FOUND\fP, and \fIflag\fP 
+points to a variable which is set to \fIval\fP. \fIflag\fP is left 
+unchanged if an option has not been found.
+.TP
+\fIval\fP 
+is the value to return, or to load into the variable pointed
+to by \fIflag\fP, if an option has been found.
+.PP
+The last element of the array has to be filled with zeroes.
+.PP
+.I index
+points to a variable which is set to the index of the \fIargv\fP element, 
+to which the return value of \fBargopt()\fP refers or to the parameter of 
+that \fIargv\fP element if such a parameter exist. \fIargv\fP is manipulated 
+by \fBargopt()\fP so the value of \fI*index\fP might not be valid upon 
+consecutive calls to \fBargopt()\fP.
+.PP
+.I *optarg
+points to a string copy of a parameter string. A copy of a parameter to an option 
+in other words. It must be free()'ed upon return by callee if non-NULL.
+.PP
+A static variable within \fBargopt()\fP is initialized to zero. You can pass a 
+value of -1 in
+.I *index
+to force a re-initialization of this variable if you are about to parse more 
+than one argv[] array.
+.PP 
+An option string can be recognized as a valid option, an ambigious option or 
+a non-option, i.e. a string that bears no resemblance to any defined option 
+whatsoever.
+.PP
+An option with a parameter takes the form of \fB-opt param\fP. An option with 
+no parameter takes the form of \fB-opt\fP. A parameter can not begin with a '-' 
+unless it has been escaped by a '\\'. You would need to pass '\\-param' or 
+\\\\-param, to pass an argument that begins with a '-', to an executable, 
+to counter bash shell expansion.
+.PP
+.SH "RETURN VALUE"
+It is guaranteed that a negative value, or \fIval\fP is returned. The
+.B argopt() 
+function returns \fBARGOPT_OPTION_FOUND\fP if the option was found and \fIflag\fP 
+is not NULL. \fIval\fP is returned if an option has been found and \fIflag\fP is 
+NULL. A negative error code is returned in all other cases. The return value is one 
+of:
+.TP
+.B ARGOPT_OPTION_FOUND
+An option has been found and 
+.I flag
+is not NULL.
+.TP
+
+.B ARGOPT_AMBIGIOUS_OPTION
+An ambigious option has been found.
+.TP
+
+.B ARGOPT_UNKNOWN_OPTION 
+An unknown option has been found.
+.TP
+
+.B ARGOPT_MISSING_PARAM
+An option is missing a required parameter.
+.TP
+
+.B ARGOPT_NOT_OPTION 
+Something which was not an option has been found.
+.TP
+
+.B ARGOPT_DONE
+All done, no more argv[] elements.
+.TP
+
+.B \fIval\fP
+.I flag
+is NULL and an option has been found.
+.PP
+
+.SH EXAMPLE
+The following example program illustrates the use of
+.BR argopt()
+with most of its features. The program must be compiled with '-largopt'.
+.nf
+.sp
+#include <unistd.h>    /* for NULL */
+#include <stdio.h>     /* for printf */
+#include <stdlib.h>    /* for exit */
+#include <argopt.h>
+
+
+int main(int argc, char **argv)
+{
+	/* current argv index */
+	int index = 0;
+
+	/* options with arguments */
+	int count;
+	int offset;
+	
+	/* option flags */
+	int opt_rw = 0;
+	int opt_rb = 0;
+
+
+	/* get options */
+	while (1) {
+		int c;
+		char *parameter;
+		struct option_t options[] = {
+			{"rb", "-rb will help you arrrbee-fy your source", NO_PARAM, NULL, 'r'},
+			{"rw", "-rw is great to foobalooze the bazee", NO_PARAM, &opt_rw, 1},
+			{"abc123", "-abc123 alphabetizes a lower set", NO_PARAM, NULL, 0},
+			{"abc456", "-abc456 alphabetizes a higher set", NO_PARAM, NULL, 0},
+			{"abc", NULL, NO_PARAM, NULL, 0},
+			{"count", "-count <PARAMETER> enumerates the parameter", NEED_PARAM, NULL, 'c'},
+			{"offset", "-offset [PARAMETER] set the offset for the optional paramater", OPTIONAL_PARAM, NULL, 'o'},
+			{0, 0, 0, 0}
+		};
+
+		c = argopt(argc,
+			   argv,
+			   options,
+			   &index,
+			   &parameter);
+
+		switch (c) {
+		case ARGOPT_OPTION_FOUND :
+			fprintf(stdout, "Option found:\\t\\t%s (*flag is not NULL)\\n", argv[index]);
+			break;
+		case ARGOPT_AMBIGIOUS_OPTION :
+			argopt_completions(stdout,
+					   "Ambigious option found. Possible completions:",
+					    ++argv[index],
+					    options);
+			break;
+		case ARGOPT_UNKNOWN_OPTION :
+			fprintf(stdout, "Unknown option found:\\t%s\\n", argv[index]);
+			argopt_help(stdout, 
+				    "Unknown option found",
+				    argv[0],
+				    options);
+			break;
+		case ARGOPT_NOT_OPTION :
+			fprintf(stdout, "Bad or malformed option found:\\t%s\\n", argv[index]);
+			break;
+		case ARGOPT_MISSING_PARAM :
+			fprintf(stdout, "Option missing parameter:\\t%s\\n", argv[index]);
+			break;
+		case ARGOPT_DONE :
+			fprintf(stdout, "\\nargv[] parsed.\\n");
+			goto opt_done;
+		case 0 :
+			fprintf(stdout, "Option found:\\t\\t%s\\n", argv[index]);
+			break;
+		case 'c' :
+			count = strtol(parameter, NULL, 10);
+			fprintf(stdout, "Count option found:\\t%s\\n", argv[index-1]);
+			fprintf(stdout, "Count parameter is:\\t\\"%s\\"\\n", parameter);
+			break;
+		case 'o' :
+			if (parameter) {
+				fprintf(stdout, "Offset option found:\\t%s\\n", argv[index-1]);
+				fprintf(stdout, "Offset parameter is:\\t\\"%s\\"\\n", parameter);
+				offset = strtol(parameter, NULL, 16);
+			} else {
+				fprintf(stdout, "Offset option found:\\t%s\\n", argv[index]);
+			}
+			break;
+		case 'r' :
+			fprintf(stdout, "Option found:\\t\\t%s\\n", argv[index]);
+			opt_rb = 1;
+			break;
+		default:
+			printf ("?? get_option() returned character code 0%o ??\\n", c);
+		}
+		if (parameter)
+			free(parameter);
+		
+		if (opt_rw) {
+			fprintf(stdout, "-rw option found:\\t%s\\n", argv[index]);
+			opt_rw = 0; /* purely cosmetic for this test progam */
+		}
+	}
+opt_done:
+	if ((index) && (index < argc)) {
+		printf ("non-option ARGV-elements: ");
+		while (index < argc)
+			printf("%s ", argv[index++]);
+		printf ("\\n");
+
+		exit(EXIT_FAILURE);
+	}
+
+	exit(EXIT_SUCCESS);
+}
+.fi
+.SH BUGS
+Not even trying to be POSIX compliant. Inspired by GNU \fBgetopt()\fP but
+implemented from scratch.
+.SH AUTHOR
+Jules Colding <jcolding@gmail.com>
+.SH ACKNOWLEDGEMENTS
+The author would like to thank the author(s) of GNU \fBgetopt()\fP for 
+inspiration.
+.SH "SEE ALSO"
+.BR getopt (3)
+
+

@@ -1,0 +1,27 @@
+Copyright
+=========
+
+Copyright (C) 2003-2012 Jules Colding <jcolding@gmail.com>
+
+
+License
+=======
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+
+Instructions
+============
+
+Install by the usual: 
+
+	make ; make install
+
+as root, or:
+
+	make ; make PREFIX=<prefix> install
+
+The default value of prefix is /usr/local.
+
