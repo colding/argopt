@@ -228,22 +228,22 @@ int main(int argc, char **argv)
 	int opt_rw = 0;
 	int opt_rb = 0;
 
+	int c;
+	char *parameter;
+	struct option_t options[] = {
+		{"rb", "-rb will help you arrrbee-fy your source", NO_PARAM, NULL, 'r'},
+		{"rw", "-rw is great to foobalooze the bazee", NO_PARAM, &opt_rw, 1},
+		{"abc123", "-abc123 alphabetizes a lower set", NO_PARAM, NULL, 0},
+		{"abc456", "-abc456 alphabetizes a higher set", NO_PARAM, NULL, 0},
+		{"abc", NULL, NO_PARAM, NULL, 0},
+		{"count", "-count <PARAMETER> enumerates the parameter", NEED_PARAM, NULL, 'c'},
+		{"offset", "-offset [PARAMETER] set the offset for the optional paramater", OPTIONAL_PARAM, NULL, 'o'},
+		{0, 0, 0, 0}
+	};
+
 
 	/* get options */
 	while (1) {
-		int c;
-		char *parameter;
-		struct option_t options[] = {
-			{"rb", "-rb will help you arrrbee-fy your source", NO_PARAM, NULL, 'r'},
-			{"rw", "-rw is great to foobalooze the bazee", NO_PARAM, &opt_rw, 1},
-			{"abc123", "-abc123 alphabetizes a lower set", NO_PARAM, NULL, 0},
-			{"abc456", "-abc456 alphabetizes a higher set", NO_PARAM, NULL, 0},
-			{"abc", NULL, NO_PARAM, NULL, 0},
-			{"count", "-count <PARAMETER> enumerates the parameter", NEED_PARAM, NULL, 'c'},
-			{"offset", "-offset [PARAMETER] set the offset for the optional paramater", OPTIONAL_PARAM, NULL, 'o'},
-			{0, 0, 0, 0}
-		};
-
 		c = argopt(argc,
 			   argv,
 			   options,
