@@ -42,20 +42,20 @@ BEGIN_C_DECLS
 #define ARGOPT_DONE (-6)
 
 enum need_param_t {
-	NO_PARAM,
-	NEED_PARAM,
-	OPTIONAL_PARAM
+        NO_PARAM,
+        NEED_PARAM,
+        OPTIONAL_PARAM
 };
 
 struct option_t {
-	const char *name;
-	const char *help;
-	const enum need_param_t param;
-	int *flag;
-	int val;
+        const char *name;
+        const char *help;
+        const enum need_param_t param;
+        int *flag;
+        int val;
 };
 
-extern int 
+extern int
 argopt(int argc,
        char *argv[],
        const struct option_t * const options,
@@ -64,15 +64,15 @@ argopt(int argc,
 
 extern void
 argopt_help(FILE *output,
-	    const char * const notice,
-	    const char * const prog,
-	    const struct option_t * const options);
+            const char * const notice,
+            const char * const prog,
+            const struct option_t * const options);
 
 extern void
 argopt_completions(FILE *output,
-		   const char * const notice,
-		   const char * const opt,
-		   const struct option_t * const options);
+                   const char * const notice,
+                   const char * const opt,
+                   const struct option_t * const options);
 
 END_C_DECLS
 
