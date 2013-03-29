@@ -383,4 +383,6 @@ argopt_completions(FILE *output,
 
                 fprintf(output, "%s\n", options[amb_array[i]].help);
         }
+
+	free(amb_array);
 }
