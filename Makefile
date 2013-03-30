@@ -1,24 +1,15 @@
 #  
-#  argopt, a library to pass command line options.
-#  Copyright (C) 2003-2012 Jules Colding <jcolding@gmail.com>
+# Copyright (C) 2013 by Jules Colding <jcolding@gmail.com>.
 #
-#  This file is part of argopt.
+# All Rights Reserved.
 #
-#  argopt is free software: you can redistribute it and/or modify
-#  it under the terms of the GNU Lesser General Public License as
-#  published by the Free Software Foundation, either version 3 of 
-#  the License, or (at your option) any later version.
+# Copying and distribution of this file, with or without modification,
+# are permitted in any medium without royalty provided the copyright
+# notice and this notice are preserved.  This file is offered as-is,
+# without any warranty.
 #
-#  argopt is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU Lesser General Public License for more details.
-#
-#  You should have received a copy of the GNU Lesser General 
-#  Public License along with argopt. If not, 
-#  see <http://www.gnu.org/licenses/>.
 
-VERSION = 0.3.0
+VERSION = 0.3.1
 
 SHELL = /bin/sh
 LDCONFIG = /sbin/ldconfig

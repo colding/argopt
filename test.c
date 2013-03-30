@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2003-2012 Jules Colding <jcolding@gmail.com>
+ *  Copyright (C) 2003-2013 Jules Colding <jcolding@gmail.com>
  *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
