@@ -6,7 +6,6 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *
  *  You can use, modify and redistribute it in any way you want.
- *
  */
 
 #include <unistd.h>
