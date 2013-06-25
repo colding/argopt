@@ -27,7 +27,6 @@
 argopt \- Parse command line options
 .SH SYNOPSIS
 .nf
-.B #include <unistd.h>
 .B #include <argopt.h>
 .sp
 .B enum need_param_t {
@@ -304,7 +303,7 @@ int main(int argc, char **argv)
 		
 		if (opt_rw) {
 			fprintf(stdout, "-rw option found:\\t%s\\n", argv[index]);
-			opt_rw = 0; /* purely cosmetic for this test progam */
+			opt_rw = 0; /* purely cosmetic for this test program */
 		}
 	}
 opt_done:
