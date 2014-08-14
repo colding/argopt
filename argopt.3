@@ -237,7 +237,7 @@ int main(int argc, char **argv)
 		{"abc", NULL, NO_PARAM, NULL, 0},
 		{"count", "-count <PARAMETER> enumerates the parameter", NEED_PARAM, NULL, 'c'},
 		{"offset", "-offset [PARAMETER] set the offset for the optional paramater", OPTIONAL_PARAM, NULL, 'o'},
-		{0, 0, 0, 0}
+		{0, 0, (enum need_param_t)0, 0, 0}
 	};
 
 	/* get options */
