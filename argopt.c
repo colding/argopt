@@ -101,10 +101,10 @@ find_option(const char *opt,
             const struct option_t * const options)
 {
         int i = 0;
-        int best = 0;
-        int match = 0;
+        size_t best = 0;
+        size_t match = 0;
         int best_idx = 0;
-        int min_match = strlen(++opt);
+        size_t min_match = strlen(++opt);
         char amb = 1;
         char found = 0;
 
