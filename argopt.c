@@ -365,7 +365,11 @@ argopt_completions(FILE *output,
         if (notice)
                 fprintf(output, "%s\n\n", notice);
 
-        amb_array = (int*)malloc((opt_count + 1)*sizeof(char*));
+        amb_array = (int*)malloc((opt_count + 1)*sizeof(int));
+        if (!amb_array) {
+                fprintf(output, "Error: Failed to allocate memory for amb_array\n");
+                return;
+        }
         for (i = 0; i <= opt_count; i++)
                 amb_array[i] = -1;
 
