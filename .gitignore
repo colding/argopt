@@ -1,3 +1,9 @@
 *.o
 *.a
-
+TAGS
+libargopt.so
+libargopt.so.0
+libargopt.so.0.3.1
+shared-opt
+source-opt
+static-opt
